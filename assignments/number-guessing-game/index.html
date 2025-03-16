@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <title>Number guessing game</title>
+    <style>
+      html {
+        font-family: sans-serif;
+      }
+
+      body {
+        width: 50%;
+        max-width: 800px;
+        min-width: 480px;
+        margin: 0 auto;
+      }
+     
+      .form input[type="number"] {
+        width: 200px;
+      }
+
+      .lastResult {
+        color: white;
+        padding: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Number guessing game</h1>
+    <p>We have selected a random number between 1 and 100. See if you can guess it in 10 turns or fewer. We'll tell you if your guess was too high or too low.</p>
+
+    <div class="form">
+      <label for="guessField">Enter a guess: </label>
+      <input type="number" min="1" max="100" id="guessField" class="guessField">
+      <input type="submit" value="Submit guess" class="guessSubmit">
+    </div>
+ 
+
+    <div class="resultParas">
+      <p class="guesses"></p>
+      <p class="lastResult"></p>
+      <p class="lowOrHi"></p>
+      <input type="submit" value="Start new game" class="restartbutton">
+    </div>
+
+    <script>
+
+let pastguesses = []
+const guesses = document.querySelector(".guesses");
+const lastresult = document.querySelector(".lastResult");
+const lowOrHi = document.querySelector(".lowOrHi");
+const restart = document.querySelector('.restartbutton');
+const takeguess = document.querySelector('.guessSubmit');
+let randomnum = Math.floor(Math.random() * 100) + 1;
+let maxguesses = 0;
+restart.style.display = "none";
+lastresult.style.color = "white";
+       
+
+        function lowhigh() {
+            const userinput = document.getElementById("guessField");
+            const usernum = userinput.valueAsNumber;
+
+            if(usernum == randomnum){
+              restart.style.display = "block";
+              takeguess.disabled = true;
+              userinput.disabled = true;
+              pastguesses[pastguesses.length] = ` ${usernum}`
+              guesses.textContent = `Past guesses: ${pastguesses}`
+              lastresult.textContent = "Congratulations! You got it right!";
+              lowOrHi.textContent = "";
+              lastresult.style.backgroundColor = "green";}
+
+       else if(usernum > randomnum){
+            maxguesses++;
+            lowOrHi.textContent = "Last guess was too high!"
+            lastresult.textContent = "Wrong!";
+            lastresult.style.backgroundColor = "red";
+            pastguesses[pastguesses.length] = ` ${usernum}`
+            guesses.textContent = `Past guesses: ${pastguesses}`
+            console.log(maxguesses);
+          if (maxguesses == 10) {
+            restart.style.display = "block";
+            lowOrHi.textContent = "";
+            lastresult.textContent = "!!!GAME OVER!!!";
+            takeguess.disabled = true;
+            userinput.disabled = true;}}
+        else if(usernum < randomnum ){
+            maxguesses++;
+            lastresult.textContent = "Wrong!";
+            lastresult.style.backgroundColor = "red";
+            lowOrHi.textContent = "Last guess was too low!"
+            pastguesses[pastguesses.length] = ` ${usernum}`
+            guesses.textContent = `Past guesses: ${pastguesses}`
+            console.log(maxguesses);
+            if (maxguesses == 10) {
+              lowOrHi.textContent = "";
+              lastresult.textContent = "!!!GAME OVER!!!";
+                restart.style.display = "block";
+                takeguess.disabled = true;
+                userinput.disabled = true;}}};
+       
+                function restartfunction() {
+                  const userinput = document.getElementById("guessField");
+
+                  pastguesses.length = 0;
+                  guesses.textContent = "";
+                  randomnum = Math.floor(Math.random() * 100) + 1;
+                  maxguesses = 0;
+                  restart.style.display = "none";
+                  lastresult.textContent = "";
+                  lastresult.style.backgroundColor = "white";
+                  lowOrHi.textContent = "";
+                  takeguess.disabled = false;
+                  userinput.disabled = false;
+                  userinput.valueAsNumber = "0";
+                }
+
+        takeguess.addEventListener("click", (e)=>{      
+        lowhigh();});
+
+        restart.addEventListener("click", (e)=>{      
+        restartfunction();});
+
+    </script>
+  </body>
+</html>
